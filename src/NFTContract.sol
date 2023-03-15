@@ -6,22 +6,23 @@ import "openzeppelin-contracts/contracts/access/Ownable.sol";
 import "openzeppelin-contracts/contracts/utils/Strings.sol";
 
 contract NFTContract is ERC1155, Ownable {
-  
-  address manager;
 
-  string _uri;
+  string public name = "Kudos Collection";
+  string public description = "A collection for giving Kudos to people who helped you out in any way.";
+  address manager;
+  string ipfsuri;
 
   event Mint(address indexed minter, uint256 tokenId);
 
   constructor(address _mananger) ERC1155("ipfs://QmUyJVMuN7ozozwJvswz33GBqoPBA1VeMAsvnkyV8fgNk7/{id}.json") {
     manager = _mananger;
-    _uri = "ipfs://QmUyJVMuN7ozozwJvswz33GBqoPBA1VeMAsvnkyV8fgNk7/";
+    ipfsuri = "ipfs://QmUyJVMuN7ozozwJvswz33GBqoPBA1VeMAsvnkyV8fgNk7/";
   }
 
   function uri(uint256 _tokenId) override public view returns (string memory) {
     return string(
       abi.encodePacked(
-          "ipfs://QmUyJVMuN7ozozwJvswz33GBqoPBA1VeMAsvnkyV8fgNk7/",
+          ipfsuri,
           Strings.toString(_tokenId),
           ".json"
       )
@@ -30,6 +31,10 @@ contract NFTContract is ERC1155, Ownable {
 
   function setURI(string memory _uri) public onlyManager {
     _setURI(_uri);
+  }
+
+  function setIPFS(string memory _ipfs) public onlyManager {
+    ipfsuri = _ipfs;
   }
 
   function mint(address mintTo, uint256 tokenId) public {
