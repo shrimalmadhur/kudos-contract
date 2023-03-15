@@ -11,6 +11,7 @@ contract NFTContract is ERC1155, Ownable {
   string public description = "A collection for giving Kudos to people who helped you out in any way.";
   address manager;
   string ipfsuri;
+  uint128 private _startMintFeeWei = 5e15;
 
   event Mint(address indexed minter, uint256 tokenId);
 
@@ -37,7 +38,8 @@ contract NFTContract is ERC1155, Ownable {
     ipfsuri = _ipfs;
   }
 
-  function mint(address mintTo, uint256 tokenId) public {
+  function mint(address mintTo, uint256 tokenId) payable public  {
+    require(msg.value >= _startMintFeeWei);
     require(msg.sender != mintTo);
     _mint(mintTo, tokenId, 1, "");
     emit Mint(mintTo, tokenId);
@@ -55,20 +57,25 @@ contract NFTContract is ERC1155, Ownable {
   }
 
   function burn(uint256 tokenId, uint256 amount) external {
-      require(balanceOf(msg.sender, tokenId) >= amount, "not enough tokens to burn");
-      _burn(msg.sender, tokenId, amount);
+    require(balanceOf(msg.sender, tokenId) >= amount, "not enough tokens to burn");
+    _burn(msg.sender, tokenId, amount);
   }
 
   function _burn(address sender, uint256 tokenId, uint256 amount) internal override (ERC1155) {
-      super._burn(sender, tokenId, amount);
+    super._burn(sender, tokenId, amount);
   }
 
   modifier onlyManager() {
-        _checkManager();
-        _;
-    }
+    _checkManager();
+    _;
+  }
 
   function _checkManager() internal view virtual {
     require(manager == msg.sender, "Ownable: caller is not the owner");
+  }
+
+  function payManager() external {
+    require(msg.sender == manager, "NFTContract: forbidden");
+    payable(manager).transfer(address(this).balance);
   }
 }
