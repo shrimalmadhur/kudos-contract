@@ -15,9 +15,9 @@ contract NFTContract is ERC1155, Ownable {
 
   event Mint(address indexed minter, uint256 tokenId);
 
-  constructor(address _mananger) ERC1155("ipfs://QmUyJVMuN7ozozwJvswz33GBqoPBA1VeMAsvnkyV8fgNk7/{id}.json") {
+  constructor(address _mananger) ERC1155("ipfs://QmPXFpvwvWi7LbMDJfJiVkAF6mk2rC14o2okXeAhtgmDBJ/{id}.json") {
     manager = _mananger;
-    ipfsuri = "ipfs://QmUyJVMuN7ozozwJvswz33GBqoPBA1VeMAsvnkyV8fgNk7/";
+    ipfsuri = "ipfs://QmPXFpvwvWi7LbMDJfJiVkAF6mk2rC14o2okXeAhtgmDBJ/";
   }
 
   function uri(uint256 _tokenId) override public view returns (string memory) {
