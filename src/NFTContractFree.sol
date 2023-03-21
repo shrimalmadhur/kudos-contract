@@ -5,19 +5,18 @@ import "openzeppelin-contracts/contracts/token/ERC1155/ERC1155.sol";
 import "openzeppelin-contracts/contracts/access/Ownable.sol";
 import "openzeppelin-contracts/contracts/utils/Strings.sol";
 
-contract NFTContract is ERC1155, Ownable {
+contract NFTContractFree is ERC1155, Ownable {
 
-  string public name = "Appreciation Collection";
-  string public description = "A collection to appreciate people who helped you out in any way.";
+  string public name = "Kudos Collection";
+  string public description = "A collection for giving Kudos to people who helped you out in any way.";
   address manager;
   string ipfsuri;
-  uint128 private _startMintFeeWei = 5e15;
 
   event Mint(address indexed minter, uint256 tokenId);
 
-  constructor(address _mananger) ERC1155("ipfs://QmebFkUcKXD3hertJVjiDUJcHwh2Et1kNTUNRTVBXKMh9j/{id}.json") {
+  constructor(address _mananger) ERC1155("ipfs://QmPXFpvwvWi7LbMDJfJiVkAF6mk2rC14o2okXeAhtgmDBJ/{id}.json") {
     manager = _mananger;
-    ipfsuri = "ipfs://QmebFkUcKXD3hertJVjiDUJcHwh2Et1kNTUNRTVBXKMh9j/";
+    ipfsuri = "ipfs://QmPXFpvwvWi7LbMDJfJiVkAF6mk2rC14o2okXeAhtgmDBJ/";
   }
 
   function uri(uint256 _tokenId) override public view returns (string memory) {
@@ -38,8 +37,7 @@ contract NFTContract is ERC1155, Ownable {
     ipfsuri = _ipfs;
   }
 
-  function mint(address mintTo, uint256 tokenId) payable public  {
-    require(msg.value >= _startMintFeeWei);
+  function mint(address mintTo, uint256 tokenId) public  {
     require(msg.sender != mintTo);
     _mint(mintTo, tokenId, 1, "");
     emit Mint(mintTo, tokenId);
@@ -71,7 +69,7 @@ contract NFTContract is ERC1155, Ownable {
   }
 
   function _checkManager() internal view virtual {
-    require(manager == msg.sender, "NFTContract: caller is not the owner");
+    require(manager == msg.sender, "Ownable: caller is not the owner");
   }
 
   function payManager() external {
